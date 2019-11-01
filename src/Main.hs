@@ -38,6 +38,8 @@ data TypeError
   | ExpectedArrowType Expr Type
   | UnboundVariable Var
   | NotSupported
+  | WhileChecking Type Expr TypeError
+  | WhileInferring Expr TypeError
   deriving (Eq, Show)
 
 data TypedExpr
@@ -50,17 +52,24 @@ type TypeEnv = Map Var Type
 
 type TypeCheckM = ReaderT TypeEnv (Except TypeError)
 
+
 runTC :: TypeEnv -> TypeCheckM a -> Either TypeError a
 runTC env m = runExcept $ runReaderT m env
 
+addContext :: (TypeError -> TypeError) -> TypeCheckM a -> TypeCheckM a
+addContext ctx m = catchError m (throwError . ctx)
+
 check :: Type -> Expr -> TypeCheckM TypedExpr
-check expectedType = \case
+check t e = addContext (WhileChecking t e) (check' t e)
+
+check' :: Type -> Expr -> TypeCheckM TypedExpr
+check' expectedType = \case
   e1@(Lam v e2) ->
     case expectedType of
       t@(TArrow t1 t2) -> local (Map.insert v t1) $ do
         _ <- check t2 e2
         pure $ TypedExpr e1 t  -- TODO recursively annotate!
-      _ -> throwError $ ExpectedArrowType e1 expectedType  -- TODO better error?
+      _ -> throwError $ ExpectedArrowType e1 expectedType
   e -> do
     typedExpr <- infer e
     let actualType = typeOf typedExpr
@@ -69,7 +78,10 @@ check expectedType = \case
       else throwError $ TypeMismatch e expectedType actualType
 
 infer :: Expr -> TypeCheckM TypedExpr
-infer = \case
+infer e = addContext (WhileInferring e) (infer' e)
+
+infer' :: Expr -> TypeCheckM TypedExpr
+infer' = \case
   i@(I _) -> pure $ TypedExpr i TInt
   b@(B _) -> pure $ TypedExpr b TBool
   v@(V var) -> asks (Map.lookup var) >>= \case
@@ -81,9 +93,25 @@ infer = \case
       TArrow t1 t2 -> do
         _ <- check t1 e2
         pure $ TypedExpr e t2  -- TODO recursively annotate!
-      t -> throwError $ ExpectedArrowType e1 t  -- TODO better error?
+      t -> throwError $ ExpectedArrowType e1 t
   Ann e ty -> check ty e
   _ -> throwError NotSupported
+
+formatErr :: TypeError -> Text
+formatErr = \case
+  TypeMismatch _ expectedType actualType ->
+    "Type mismatch!\n   Expected type: " <> show expectedType <> "\n"
+      <> "     Actual type: " <> show actualType
+  ExpectedArrowType _ t ->
+    "Expected type " <> show t <> ", but got function type instead."
+  UnboundVariable v ->
+    "Found unbound variable: " <> v <> "."
+  WhileChecking t e err ->
+    "While checking the expression (" <> show e <>
+      ") to have type (" <> show t <> "):\n" <> formatErr err
+  WhileInferring e err ->
+    "While inferring the expression: " <> show e <> "\n" <> formatErr err
+  NotSupported -> "Unsupported path in typechecker."
 
 
 -- Testing code:
@@ -98,7 +126,7 @@ typeEnv = Map.fromList
 scenarios :: [(Expr, Type)]
 scenarios =
   let exprs =
-        [  0
+        [ 0
         , 1
         , B True
         , B False
@@ -129,6 +157,7 @@ scenarios =
 main :: IO ()
 main = do
   print ""
-  for_ scenarios $ \(e, t) -> do
-    putStrLn $ ("Checking expr: " <> show e <> ", expected type: " <> show t :: Text)
-    print $ runTC typeEnv (check t e)
+  for_ scenarios $ \(e, t) ->
+    case runTC typeEnv $ check t e of
+      Left err -> putStrLn $ formatErr err
+      Right typedExpr -> putStrLn ("Success: " <> show typedExpr :: Text)
