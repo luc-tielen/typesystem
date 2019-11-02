@@ -1,7 +1,4 @@
 
-{-# LANGUAGE UndecidableInstances #-}
-{-# OPTIONS_GHC -Wno-deprecations #-}
-
 module Main ( main ) where
 
 import Protolude hiding ( Type, TypeError, check )
@@ -9,50 +6,46 @@ import qualified Data.Map as Map
 import qualified Data.Text as T
 
 
-data Phase = PreTC | PostTC
-type PreTC = 'PreTC
-type PostTC = 'PostTC
-
-type family Ann (ph :: Phase) where
-  Ann PreTC = ()
-  Ann PostTC = Type
-
 type Var = Text
 
-data Expr (ph :: Phase)
-  = I (Ann ph) Int
-  | B (Ann ph) Bool
-  | V (Ann ph) Var
-  | If (Ann ph) (Expr ph) (Expr ph) (Expr ph)
-  | Lam (Ann ph) Var (Expr ph)
-  | App (Expr ph) (Expr ph)
-  | TyAnn (Expr ph) Type
+data Expr
+  = I Int
+  | B Bool
+  | V Var
+  | If Expr Expr Expr
+  | Lam Var Expr
+  | App Expr Expr
+  | TyAnn Expr Type
   | Hole
+  deriving (Eq, Show)
 
-typeOf :: Expr PostTC -> Type
+instance Num Expr where
+  fromInteger = I . fromInteger
+  e1 + e2 = App (App (V "+") e1) e2
+  e1 * e2 = App (App (V "*") e1) e2
+  abs = App (V "abs")
+  signum = App (V "signum")
+  negate = App (V "negate")
+
+data TypedExpr
+  = I' Type Int
+  | B' Type Bool
+  | V' Type Var
+  | If' Type TypedExpr TypedExpr TypedExpr
+  | Lam' Type Var TypedExpr
+  | App' Type TypedExpr TypedExpr
+  | TyAnn' TypedExpr Type
+  deriving (Eq, Show)
+
+typeOf :: TypedExpr -> Type
 typeOf = \case
-  I ty _ -> ty
-  B ty _ -> ty
-  V ty _ -> ty
-  If ty _ _ _ -> ty
-  Lam ty _ _ -> ty
-  App e1 _ ->
-    case typeOf e1 of
-      TArrow _ t2 -> t2
-      _ -> panic "Internal error: invalid type for App constructor."
-  TyAnn _ ty -> ty
-  Hole -> panic "Internal error: should not call typeOf on a hole."
-
-deriving instance Eq (Ann ph) => Eq (Expr ph)
-deriving instance Show (Ann ph) => Show (Expr ph)
-
-instance Num (Expr PreTC) where
-  fromInteger = I () . fromInteger
-  e1 + e2 = App (App (V () "+") e1) e2
-  e1 * e2 = App (App (V () "*") e1) e2
-  abs = undefined
-  signum = undefined
-  negate = undefined
+  I' ty _ -> ty
+  B' ty _ -> ty
+  V' ty _ -> ty
+  If' ty _ _ _ -> ty
+  Lam' ty _ _ -> ty
+  App' ty _ _ -> ty
+  TyAnn' _ ty -> ty
 
 data Type
   = TInt
@@ -61,13 +54,13 @@ data Type
   deriving (Eq, Show)
 
 data TypeError
-  = TypeMismatch (Expr PreTC) Type Type
-  | ExpectedArrowType (Expr PreTC) Type
+  = TypeMismatch Expr Type Type
+  | ExpectedArrowType Expr Type
   | UnboundVariable Var
   | FoundHole TypeEnv
   | NotSupported
-  | WhileChecking Type (Expr PreTC) TypeError
-  | WhileInferring (Expr PreTC) TypeError
+  | WhileChecking Type Expr TypeError
+  | WhileInferring Expr TypeError
   deriving (Eq, Show)
 
 
@@ -82,22 +75,22 @@ runTC env m = runExcept $ runReaderT m env
 addContext :: (TypeError -> TypeError) -> TypeCheckM a -> TypeCheckM a
 addContext ctx m = catchError m (throwError . ctx)
 
-check :: Type -> Expr PreTC -> TypeCheckM (Expr PostTC)
+check :: Type -> Expr -> TypeCheckM TypedExpr
 check t e = addContext (WhileChecking t e) (check' t e)
 
-check' :: Type -> Expr PreTC -> TypeCheckM (Expr PostTC)
+check' :: Type -> Expr -> TypeCheckM TypedExpr
 check' expectedType = \case
-  e1@(Lam _ v e2) ->
+  e1@(Lam v e2) ->
     case expectedType of
       t@(TArrow t1 t2) -> local (Map.insert v t1) $ do
         e2' <- check t2 e2
-        pure $ Lam t v e2'
+        pure $ Lam' t v e2'
       _ -> throwError $ ExpectedArrowType e1 expectedType
-  If _ c t f -> do
+  If c t f -> do
     c' <- check TBool c
     t' <- check expectedType t
     f' <- check expectedType f
-    pure $ If expectedType c' t' f'
+    pure $ If' expectedType c' t' f'
   Hole -> do
     env <- ask
     throwError $ FoundHole env
@@ -108,22 +101,22 @@ check' expectedType = \case
       then pure typedExpr
       else throwError $ TypeMismatch e expectedType actualType
 
-infer :: Expr PreTC -> TypeCheckM (Expr PostTC)
+infer :: Expr -> TypeCheckM TypedExpr
 infer e = addContext (WhileInferring e) (infer' e)
 
-infer' :: Expr PreTC -> TypeCheckM (Expr PostTC)
+infer' :: Expr -> TypeCheckM TypedExpr
 infer' = \case
-  I _ i -> pure $ I TInt i
-  B _ b -> pure $ B TBool b
-  V _ var -> asks (Map.lookup var) >>= \case
-    Just ty -> pure $ V ty var
+  I i -> pure $ I' TInt i
+  B b -> pure $ B' TBool b
+  V var -> asks (Map.lookup var) >>= \case
+    Just ty -> pure $ V' ty var
     Nothing -> throwError $ UnboundVariable var
   App e1 e2 -> do
     e1' <- infer e1
     case typeOf e1' of
-      TArrow t1 _ -> do
+      TArrow t1 t2 -> do
         e2' <- check t1 e2
-        pure $ App e1' e2'
+        pure $ App' t2 e1' e2'
       t -> throwError $ ExpectedArrowType e1 t
   TyAnn e ty -> check ty e
   Hole -> do
@@ -165,33 +158,33 @@ typeEnv = Map.fromList
   , ("+", TArrow TInt (TArrow TInt TInt))
   ]
 
-scenarios :: [(Expr PreTC, Type)]
+scenarios :: [(Expr, Type)]
 scenarios =
   let exprs =
         [ 0
         , 1
-        , B () True
-        , B () False
-        , B () True + B () False
+        , B True
+        , B False
+        , B True + B False
         , 20 + 22
-        , V () "a", V () "b", V () "c"
-        , If () 0 1 2
-        , If () (B () True) 1 2
-        , If () (B () True) (B () False) 2
-        , If () (B () True) 1 (B () False)
-        , TyAnn (B () True) TInt
-        , TyAnn (B () True) TBool
+        , V "a", V "b", V "c"
+        , If 0 1 2
+        , If (B True) 1 2
+        , If (B True) (B False) 2
+        , If (B True) 1 (B False)
+        , TyAnn (B True) TInt
+        , TyAnn (B True) TBool
         , TyAnn 123 TInt
         , TyAnn 123 TBool
-        , TyAnn (Lam () "v" $ B () False) (TArrow TInt TBool)
-        , TyAnn (Lam () "v" $ B () False) (TArrow TInt TInt)
-        , Lam () "v" $ B () False
-        , Lam () "v" $ V () "v"
-        , App (B () True) 0
-        , App (TyAnn (Lam () "v" $ B () False) (TArrow TInt TInt)) 0
-        , App (TyAnn (Lam () "v" $ B () False) (TArrow TInt TBool)) 0
+        , TyAnn (Lam "v" $ B False) (TArrow TInt TBool)
+        , TyAnn (Lam "v" $ B False) (TArrow TInt TInt)
+        , Lam "v" $ B False
+        , Lam "v" $ V "v"
+        , App (B True) 0
+        , App (TyAnn (Lam "v" $ B False) (TArrow TInt TInt)) 0
+        , App (TyAnn (Lam "v" $ B False) (TArrow TInt TBool)) 0
         , Hole
-        , Lam () "v" Hole
+        , Lam "v" Hole
         , App Hole 0
         ]
       types =

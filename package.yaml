@@ -21,10 +21,6 @@ default-extensions:
   - OverloadedStrings
   - LambdaCase
   - FlexibleContexts
-  - FlexibleInstances
-  - TypeFamilies
-  - DataKinds
-  - StandaloneDeriving
 
 ghc-options:
   - -Wall
