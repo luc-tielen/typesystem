@@ -18,6 +18,12 @@ dependencies:
 default-extensions:
   - NoImplicitPrelude
   - OverloadedStrings
+  - LambdaCase
+  - FlexibleContexts
+  - FlexibleInstances
+  - TypeFamilies
+  - DataKinds
+  - StandaloneDeriving
 
 ghc-options:
   - -Wall
