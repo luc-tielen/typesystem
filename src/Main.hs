@@ -6,6 +6,7 @@ module Main ( main ) where
 
 import Protolude hiding ( Type, TypeError, check )
 import qualified Data.Map as Map
+import qualified Data.Text as T
 
 
 data Phase = PreTC | PostTC
@@ -25,6 +26,7 @@ data Expr (ph :: Phase)
   | Lam (Ann ph) Var (Expr ph)
   | App (Expr ph) (Expr ph)
   | TyAnn (Expr ph) Type
+  | Hole
 
 typeOf :: Expr PostTC -> Type
 typeOf = \case
@@ -35,8 +37,9 @@ typeOf = \case
   App e1 _ ->
     case typeOf e1 of
       TArrow _ t2 -> t2
-      _ -> panic "Internal error: invalid type for App constructor"
+      _ -> panic "Internal error: invalid type for App constructor."
   TyAnn _ ty -> ty
+  Hole -> panic "Internal error: should not call typeOf on a hole."
 
 deriving instance Eq (Ann ph) => Eq (Expr ph)
 deriving instance Show (Ann ph) => Show (Expr ph)
@@ -59,6 +62,7 @@ data TypeError
   = TypeMismatch (Expr PreTC) Type Type
   | ExpectedArrowType (Expr PreTC) Type
   | UnboundVariable Var
+  | FoundHole TypeEnv
   | NotSupported
   | WhileChecking Type (Expr PreTC) TypeError
   | WhileInferring (Expr PreTC) TypeError
@@ -87,6 +91,9 @@ check' expectedType = \case
         e2' <- check t2 e2
         pure $ Lam t v e2'
       _ -> throwError $ ExpectedArrowType e1 expectedType
+  Hole -> do
+    env <- ask
+    throwError $ FoundHole env
   e -> do
     typedExpr <- infer e
     let actualType = typeOf typedExpr
@@ -112,6 +119,9 @@ infer' = \case
         pure $ App e1' e2'
       t -> throwError $ ExpectedArrowType e1 t
   TyAnn e ty -> check ty e
+  Hole -> do
+    env <- ask
+    throwError $ FoundHole env
   _ -> throwError NotSupported
 
 formatErr :: TypeError -> Text
@@ -123,12 +133,20 @@ formatErr = \case
     "Expected type " <> show t <> ", but got function type instead."
   UnboundVariable v ->
     "Found unbound variable: " <> v <> "."
+  FoundHole env ->
+    "Found hole, environment:\n" <> formatTypeEnv env
   WhileChecking t e err ->
     "While checking the expression (" <> show e <>
       ") to have type (" <> show t <> "):\n" <> formatErr err
   WhileInferring e err ->
     "While inferring the expression: " <> show e <> "\n" <> formatErr err
   NotSupported -> "Unsupported path in typechecker."
+
+formatTypeEnv :: TypeEnv -> Text
+formatTypeEnv env =
+  let entries = Map.toList env
+      toLine (var, ty) = "- " <> show var <> ": " <> show ty
+   in T.pack $ intercalate "\n" $ map toLine entries
 
 
 -- Testing code:
@@ -161,6 +179,9 @@ scenarios =
         , App (B () True) 0
         , App (TyAnn (Lam () "v" $ B () False) (TArrow TInt TInt)) 0
         , App (TyAnn (Lam () "v" $ B () False) (TArrow TInt TBool)) 0
+        , Hole
+        , Lam () "v" Hole
+        , App Hole 0
         ]
       types =
         [ TBool
