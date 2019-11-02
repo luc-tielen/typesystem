@@ -23,6 +23,7 @@ data Expr (ph :: Phase)
   = I (Ann ph) Int
   | B (Ann ph) Bool
   | V (Ann ph) Var
+  | If (Ann ph) (Expr ph) (Expr ph) (Expr ph)
   | Lam (Ann ph) Var (Expr ph)
   | App (Expr ph) (Expr ph)
   | TyAnn (Expr ph) Type
@@ -33,6 +34,7 @@ typeOf = \case
   I ty _ -> ty
   B ty _ -> ty
   V ty _ -> ty
+  If ty _ _ _ -> ty
   Lam ty _ _ -> ty
   App e1 _ ->
     case typeOf e1 of
@@ -91,6 +93,11 @@ check' expectedType = \case
         e2' <- check t2 e2
         pure $ Lam t v e2'
       _ -> throwError $ ExpectedArrowType e1 expectedType
+  If _ c t f -> do
+    c' <- check TBool c
+    t' <- check expectedType t
+    f' <- check expectedType f
+    pure $ If expectedType c' t' f'
   Hole -> do
     env <- ask
     throwError $ FoundHole env
@@ -106,9 +113,9 @@ infer e = addContext (WhileInferring e) (infer' e)
 
 infer' :: Expr PreTC -> TypeCheckM (Expr PostTC)
 infer' = \case
-  (I _ i) -> pure $ I TInt i
-  (B _ b) -> pure $ B TBool b
-  (V _ var) -> asks (Map.lookup var) >>= \case
+  I _ i -> pure $ I TInt i
+  B _ b -> pure $ B TBool b
+  V _ var -> asks (Map.lookup var) >>= \case
     Just ty -> pure $ V ty var
     Nothing -> throwError $ UnboundVariable var
   App e1 e2 -> do
@@ -168,6 +175,10 @@ scenarios =
         , B () True + B () False
         , 20 + 22
         , V () "a", V () "b", V () "c"
+        , If () 0 1 2
+        , If () (B () True) 1 2
+        , If () (B () True) (B () False) 2
+        , If () (B () True) 1 (B () False)
         , TyAnn (B () True) TInt
         , TyAnn (B () True) TBool
         , TyAnn 123 TInt
@@ -193,9 +204,7 @@ scenarios =
     in [(e, ty) | e <- exprs, ty <- types]
 
 main :: IO ()
-main = do
-  print ""
-  for_ scenarios $ \(e, t) ->
-    case runTC typeEnv $ check t e of
-      Left err -> putStrLn $ formatErr err
-      Right typedExpr -> putStrLn ("Success: " <> show typedExpr :: Text)
+main = for_ scenarios $ \(e, t) ->
+  case runTC typeEnv $ check t e of
+    Left err -> putStrLn $ formatErr err
+    Right typedExpr -> putStrLn ("Success: " <> show typedExpr :: Text)
