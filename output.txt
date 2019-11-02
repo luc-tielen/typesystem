@@ -1,0 +1,598 @@
+While checking the expression (I 0) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+Success: I' TInt 0
+While checking the expression (I 0) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TInt
+While checking the expression (I 0) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TInt
+While checking the expression (I 0) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TInt
+While checking the expression (I 1) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+Success: I' TInt 1
+While checking the expression (I 1) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TInt
+While checking the expression (I 1) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TInt
+While checking the expression (I 1) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TInt
+Success: B' TBool True
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (B True) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TBool
+While checking the expression (B True) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TBool
+While checking the expression (B True) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TBool
+Success: B' TBool False
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (B False) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TBool
+While checking the expression (B False) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TBool
+While checking the expression (B False) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TBool
+While checking the expression (App (App (V "+") (B True)) (B False)) to have type (TBool):
+While inferring the expression: App (App (V "+") (B True)) (B False)
+While inferring the expression: App (V "+") (B True)
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (App (V "+") (B True)) (B False)) to have type (TInt):
+While inferring the expression: App (App (V "+") (B True)) (B False)
+While inferring the expression: App (V "+") (B True)
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (App (V "+") (B True)) (B False)) to have type (TArrow TInt TBool):
+While inferring the expression: App (App (V "+") (B True)) (B False)
+While inferring the expression: App (V "+") (B True)
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (App (V "+") (B True)) (B False)) to have type (TArrow TBool TInt):
+While inferring the expression: App (App (V "+") (B True)) (B False)
+While inferring the expression: App (V "+") (B True)
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (App (V "+") (B True)) (B False)) to have type (TArrow TInt TInt):
+While inferring the expression: App (App (V "+") (B True)) (B False)
+While inferring the expression: App (V "+") (B True)
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (App (V "+") (I 20)) (I 22)) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+Success: App' TInt (App' (TArrow TInt TInt) (V' (TArrow TInt (TArrow TInt TInt)) "+") (I' TInt 20)) (I' TInt 22)
+While checking the expression (App (App (V "+") (I 20)) (I 22)) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TInt
+While checking the expression (App (App (V "+") (I 20)) (I 22)) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TInt
+While checking the expression (App (App (V "+") (I 20)) (I 22)) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TInt
+While checking the expression (V "a") to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+Success: V' TInt "a"
+While checking the expression (V "a") to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TInt
+While checking the expression (V "a") to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TInt
+While checking the expression (V "a") to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TInt
+Success: V' TBool "b"
+While checking the expression (V "b") to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (V "b") to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TBool
+While checking the expression (V "b") to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TBool
+While checking the expression (V "b") to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TBool
+While checking the expression (V "c") to have type (TBool):
+While inferring the expression: V "c"
+Found unbound variable: c.
+While checking the expression (V "c") to have type (TInt):
+While inferring the expression: V "c"
+Found unbound variable: c.
+While checking the expression (V "c") to have type (TArrow TInt TBool):
+While inferring the expression: V "c"
+Found unbound variable: c.
+While checking the expression (V "c") to have type (TArrow TBool TInt):
+While inferring the expression: V "c"
+Found unbound variable: c.
+While checking the expression (V "c") to have type (TArrow TInt TInt):
+While inferring the expression: V "c"
+Found unbound variable: c.
+While checking the expression (If (I 0) (I 1) (I 2)) to have type (TBool):
+While checking the expression (I 0) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (If (I 0) (I 1) (I 2)) to have type (TInt):
+While checking the expression (I 0) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (If (I 0) (I 1) (I 2)) to have type (TArrow TInt TBool):
+While checking the expression (I 0) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (If (I 0) (I 1) (I 2)) to have type (TArrow TBool TInt):
+While checking the expression (I 0) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (If (I 0) (I 1) (I 2)) to have type (TArrow TInt TInt):
+While checking the expression (I 0) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (If (B True) (I 1) (I 2)) to have type (TBool):
+While checking the expression (I 1) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+Success: If' TInt (B' TBool True) (I' TInt 1) (I' TInt 2)
+While checking the expression (If (B True) (I 1) (I 2)) to have type (TArrow TInt TBool):
+While checking the expression (I 1) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TInt
+While checking the expression (If (B True) (I 1) (I 2)) to have type (TArrow TBool TInt):
+While checking the expression (I 1) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TInt
+While checking the expression (If (B True) (I 1) (I 2)) to have type (TArrow TInt TInt):
+While checking the expression (I 1) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TInt
+While checking the expression (If (B True) (B False) (I 2)) to have type (TBool):
+While checking the expression (I 2) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (If (B True) (B False) (I 2)) to have type (TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (If (B True) (B False) (I 2)) to have type (TArrow TInt TBool):
+While checking the expression (B False) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TBool
+While checking the expression (If (B True) (B False) (I 2)) to have type (TArrow TBool TInt):
+While checking the expression (B False) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TBool
+While checking the expression (If (B True) (B False) (I 2)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TBool
+While checking the expression (If (B True) (I 1) (B False)) to have type (TBool):
+While checking the expression (I 1) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (If (B True) (I 1) (B False)) to have type (TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (If (B True) (I 1) (B False)) to have type (TArrow TInt TBool):
+While checking the expression (I 1) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TInt
+While checking the expression (If (B True) (I 1) (B False)) to have type (TArrow TBool TInt):
+While checking the expression (I 1) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TInt
+While checking the expression (If (B True) (I 1) (B False)) to have type (TArrow TInt TInt):
+While checking the expression (I 1) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TInt
+While checking the expression (TyAnn (B True) TInt) to have type (TBool):
+While inferring the expression: TyAnn (B True) TInt
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (B True) TInt) to have type (TInt):
+While inferring the expression: TyAnn (B True) TInt
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (B True) TInt) to have type (TArrow TInt TBool):
+While inferring the expression: TyAnn (B True) TInt
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (B True) TInt) to have type (TArrow TBool TInt):
+While inferring the expression: TyAnn (B True) TInt
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (B True) TInt) to have type (TArrow TInt TInt):
+While inferring the expression: TyAnn (B True) TInt
+While checking the expression (B True) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+Success: B' TBool True
+While checking the expression (TyAnn (B True) TBool) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (B True) TBool) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TBool
+While checking the expression (TyAnn (B True) TBool) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TBool
+While checking the expression (TyAnn (B True) TBool) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TBool
+While checking the expression (TyAnn (I 123) TInt) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+Success: I' TInt 123
+While checking the expression (TyAnn (I 123) TInt) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TInt
+While checking the expression (TyAnn (I 123) TInt) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TInt
+While checking the expression (TyAnn (I 123) TInt) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TInt
+While checking the expression (TyAnn (I 123) TBool) to have type (TBool):
+While inferring the expression: TyAnn (I 123) TBool
+While checking the expression (I 123) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (TyAnn (I 123) TBool) to have type (TInt):
+While inferring the expression: TyAnn (I 123) TBool
+While checking the expression (I 123) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (TyAnn (I 123) TBool) to have type (TArrow TInt TBool):
+While inferring the expression: TyAnn (I 123) TBool
+While checking the expression (I 123) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (TyAnn (I 123) TBool) to have type (TArrow TBool TInt):
+While inferring the expression: TyAnn (I 123) TBool
+While checking the expression (I 123) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (TyAnn (I 123) TBool) to have type (TArrow TInt TInt):
+While inferring the expression: TyAnn (I 123) TBool
+While checking the expression (I 123) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TArrow TInt TBool
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TArrow TInt TBool
+Success: Lam' (TArrow TInt TBool) "v" (B' TBool False)
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TArrow TInt TBool
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TArrow TInt TBool
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) to have type (TBool):
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) to have type (TInt):
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) to have type (TArrow TInt TBool):
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) to have type (TArrow TBool TInt):
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) to have type (TArrow TInt TInt):
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (Lam "v" (B False)) to have type (TBool):
+Expected type TBool, but got function type instead.
+While checking the expression (Lam "v" (B False)) to have type (TInt):
+Expected type TInt, but got function type instead.
+Success: Lam' (TArrow TInt TBool) "v" (B' TBool False)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TBool TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (Lam "v" (V "v")) to have type (TBool):
+Expected type TBool, but got function type instead.
+While checking the expression (Lam "v" (V "v")) to have type (TInt):
+Expected type TInt, but got function type instead.
+While checking the expression (Lam "v" (V "v")) to have type (TArrow TInt TBool):
+While checking the expression (V "v") to have type (TBool):
+Type mismatch!
+   Expected type: TBool
+     Actual type: TInt
+While checking the expression (Lam "v" (V "v")) to have type (TArrow TBool TInt):
+While checking the expression (V "v") to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+Success: Lam' (TArrow TInt TInt) "v" (V' TInt "v")
+While checking the expression (App (B True) (I 0)) to have type (TBool):
+While inferring the expression: App (B True) (I 0)
+Expected type TBool, but got function type instead.
+While checking the expression (App (B True) (I 0)) to have type (TInt):
+While inferring the expression: App (B True) (I 0)
+Expected type TBool, but got function type instead.
+While checking the expression (App (B True) (I 0)) to have type (TArrow TInt TBool):
+While inferring the expression: App (B True) (I 0)
+Expected type TBool, but got function type instead.
+While checking the expression (App (B True) (I 0)) to have type (TArrow TBool TInt):
+While inferring the expression: App (B True) (I 0)
+Expected type TBool, but got function type instead.
+While checking the expression (App (B True) (I 0)) to have type (TArrow TInt TInt):
+While inferring the expression: App (B True) (I 0)
+Expected type TBool, but got function type instead.
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)) to have type (TBool):
+While inferring the expression: App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)) to have type (TInt):
+While inferring the expression: App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)) to have type (TArrow TInt TBool):
+While inferring the expression: App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)) to have type (TArrow TBool TInt):
+While inferring the expression: App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)) to have type (TArrow TInt TInt):
+While inferring the expression: App (TyAnn (Lam "v" (B False)) (TArrow TInt TInt)) (I 0)
+While inferring the expression: TyAnn (Lam "v" (B False)) (TArrow TInt TInt)
+While checking the expression (Lam "v" (B False)) to have type (TArrow TInt TInt):
+While checking the expression (B False) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+Success: App' TBool (Lam' (TArrow TInt TBool) "v" (B' TBool False)) (I' TInt 0)
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) (I 0)) to have type (TInt):
+Type mismatch!
+   Expected type: TInt
+     Actual type: TBool
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) (I 0)) to have type (TArrow TInt TBool):
+Type mismatch!
+   Expected type: TArrow TInt TBool
+     Actual type: TBool
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) (I 0)) to have type (TArrow TBool TInt):
+Type mismatch!
+   Expected type: TArrow TBool TInt
+     Actual type: TBool
+While checking the expression (App (TyAnn (Lam "v" (B False)) (TArrow TInt TBool)) (I 0)) to have type (TArrow TInt TInt):
+Type mismatch!
+   Expected type: TArrow TInt TInt
+     Actual type: TBool
+While checking the expression (Hole) to have type (TBool):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (Hole) to have type (TInt):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (Hole) to have type (TArrow TInt TBool):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (Hole) to have type (TArrow TBool TInt):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (Hole) to have type (TArrow TInt TInt):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (Lam "v" Hole) to have type (TBool):
+Expected type TBool, but got function type instead.
+While checking the expression (Lam "v" Hole) to have type (TInt):
+Expected type TInt, but got function type instead.
+While checking the expression (Lam "v" Hole) to have type (TArrow TInt TBool):
+While checking the expression (Hole) to have type (TBool):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+- "v": TInt
+While checking the expression (Lam "v" Hole) to have type (TArrow TBool TInt):
+While checking the expression (Hole) to have type (TInt):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+- "v": TBool
+While checking the expression (Lam "v" Hole) to have type (TArrow TInt TInt):
+While checking the expression (Hole) to have type (TInt):
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+- "v": TInt
+While checking the expression (App Hole (I 0)) to have type (TBool):
+While inferring the expression: App Hole (I 0)
+While inferring the expression: Hole
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (App Hole (I 0)) to have type (TInt):
+While inferring the expression: App Hole (I 0)
+While inferring the expression: Hole
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (App Hole (I 0)) to have type (TArrow TInt TBool):
+While inferring the expression: App Hole (I 0)
+While inferring the expression: Hole
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (App Hole (I 0)) to have type (TArrow TBool TInt):
+While inferring the expression: App Hole (I 0)
+While inferring the expression: Hole
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool
+While checking the expression (App Hole (I 0)) to have type (TArrow TInt TInt):
+While inferring the expression: App Hole (I 0)
+While inferring the expression: Hole
+Found hole, environment:
+- "+": TArrow TInt (TArrow TInt TInt)
+- "a": TInt
+- "b": TBool

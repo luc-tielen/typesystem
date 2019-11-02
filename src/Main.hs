@@ -19,14 +19,6 @@ data Expr
   | Hole
   deriving (Eq, Show)
 
-instance Num Expr where
-  fromInteger = I . fromInteger
-  e1 + e2 = App (App (V "+") e1) e2
-  e1 * e2 = App (App (V "*") e1) e2
-  abs = App (V "abs")
-  signum = App (V "signum")
-  negate = App (V "negate")
-
 data TypedExpr
   = I' Type Int
   | B' Type Bool
@@ -150,6 +142,16 @@ formatTypeEnv env =
 
 
 -- Testing code:
+
+-- Only used for more easily constructing expressions
+instance Num Expr where
+  fromInteger = I . fromInteger
+  e1 + e2 = App (App (V "+") e1) e2
+  e1 * e2 = App (App (V "*") e1) e2
+  abs = App (V "abs")
+  signum = App (V "signum")
+  negate = App (V "negate")
+
 
 typeEnv :: TypeEnv
 typeEnv = Map.fromList
