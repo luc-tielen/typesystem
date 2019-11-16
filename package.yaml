@@ -12,6 +12,7 @@ extra-source-files:
 
 dependencies:
   - base >= 4.11.0 && < 5
+  - mtl
   - protolude
   - containers
   - text
