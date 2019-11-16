@@ -128,11 +128,13 @@ infer' = \case
       pure $ Lam' lamType v e'
   App e1 e2 -> do
     e1' <- infer e1
-    case typeOf e1' of
+    subst <- gets substitution
+    let t = typeOf e1'
+    case substituteType subst t of
       TArrow t1 t2 -> do
         e2' <- check t1 e2
         pure $ App' t2 e1' e2'
-      t -> throwError $ ExpectedArrowType e1 t
+      ty -> throwError $ ExpectedArrowType e1 ty
   TyAnn e ty -> check ty e
   If c t e -> do
     c' <- check TBool c
