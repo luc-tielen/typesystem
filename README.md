@@ -7,6 +7,11 @@ but adds some extra things:
 
 - Step by step error reporting
 - Support for typed holes
+- Returns a typed expression, with type information at every node of the tree
+
+The [type-variables branch](https://github.com/luc-tielen/typesystem/tree/type-variables)
+contains some additional code that allows users to specify types containing
+type variables.
 
 
 ## Running the examples
