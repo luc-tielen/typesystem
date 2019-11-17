@@ -11,7 +11,7 @@ but adds some extra things:
 
 The [type-variables branch](https://github.com/luc-tielen/typesystem/tree/type-variables)
 contains some additional code that allows users to specify types containing
-type variables.
+type variables (unification system based on the Purescript typechecker).
 
 
 ## Running the examples
