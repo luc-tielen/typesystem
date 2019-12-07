@@ -45,8 +45,8 @@ library:
   source-dirs:        lib
 
 executables:
-  typesystem:
-    source-dirs:      src
+  typesystem-exe:
+    source-dirs:      src lib
     main:             Main.hs
     dependencies:
       - typesystem
