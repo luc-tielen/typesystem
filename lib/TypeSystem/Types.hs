@@ -28,11 +28,19 @@ data TypedExpr
   | TyAnn' TypedExpr Type
   deriving (Eq, Show)
 
+newtype SkolemScope = SkolemScope Int
+  deriving (Eq, Ord, Show)
+
+newtype Skolem = Skolem Int
+  deriving (Eq, Show)
+
 data Type
   = TInt
   | TBool
-  | TVar Text     -- Type variable, provided by the user
-  | TUnknown Int  -- Used only during unification, when having to guess a type
+  | TVar Var                        -- Type variable, provided by the user
+  | TUnknown Int                    -- Used only during unification, when having to guess a type
+  | TSkolem Var SkolemScope Skolem  -- Rigid type variable, only available in a specific scope
+  | TForAll Var SkolemScope Type
   | TArrow Type Type
   deriving (Eq, Show)
 
@@ -45,6 +53,8 @@ data TypeError
   | FoundHole TypeEnv
   | OccursCheck Type Type
   | UnificationFailure Type Type
+  | EscapedSkolem Var Type
+  | MultipleErrors (NonEmpty TypeError)
   | WhileChecking Type Expr TypeError
   | WhileInferring Expr TypeError
   | WhileUnifyingTypes Type Type TypeError

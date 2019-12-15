@@ -10,12 +10,13 @@ import qualified Data.IntMap as IntMap
 import qualified Data.List as List
 import TypeSystem.Types
 import TypeSystem.Monad
+import TypeSystem.Skolems
 
 -- Generate a fresh unification variable
 freshUnificationVar :: TypeCheckM Type
 freshUnificationVar = do
-  ty <- TUnknown <$> gets nextVar
-  modify $ \s -> s { nextVar = nextVar s + 1 }
+  ty <- TUnknown <$> gets nextUnificationVar
+  modify $ \s -> s { nextUnificationVar = nextUnificationVar s + 1 }
   pure ty
 
 -- Tries to unify 2 types, updating the Substitution along the way.
@@ -33,6 +34,17 @@ unifyType t1 t2 = addContext (WhileUnifyingTypes t1 t2) $ do
     unifyType' (TUnknown u1) (TUnknown u2) | u1 == u2 = pure ()
     unifyType' (TUnknown u) t = solveType u t
     unifyType' t (TUnknown u) = solveType u t
+    unifyType' (TForAll name1 scope1 ty1) (TForAll name2 scope2 ty2) = do
+      skolem <- newSkolemConstant
+      let ty1' = replaceVarWithSkolem name1 skolem scope1 ty1
+      let ty2' = replaceVarWithSkolem name2 skolem scope2 ty2
+      unifyType ty1' ty2'
+    unifyType' (TForAll name scope ty1) ty2 = do
+      skolem <- newSkolemConstant
+      let ty1' = replaceVarWithSkolem name skolem scope ty1
+      unifyType ty1' ty2
+    unifyType' ty1 ty2@TForAll {} = unifyType ty2 ty1
+    unifyType' (TSkolem _ _ skolem1) (TSkolem _ _ skolem2) | skolem1 == skolem2 = pure ()
     unifyType' ty1 ty2 = throwError $ UnificationFailure ty1 ty2
 
 -- Recursively substitute the type given a subtitution

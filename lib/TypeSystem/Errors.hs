@@ -24,6 +24,12 @@ formatErr = \case
     "Occurs check: cannot construct the infinite type: " <> show t1 <> " ~ " <> show t2
   UnificationFailure t1 t2 ->
     "Failed to unify the 2 following types:\n- " <> show t1 <> "\n- " <> show t2
+  EscapedSkolem var ty ->
+    "Found a skolem (rigid type variable) '" <> show var <>
+    "' that escaped it's scope in the type:\n  " <> show ty
+  MultipleErrors errors ->
+    "Found the following errors:\n" <>
+      T.intercalate "\n\n" (map formatErr $ toList errors)
   WhileChecking t e err ->
     "While checking the expression (" <> show e <>
       ") to have type (" <> show t <> "):\n" <> formatErr err
