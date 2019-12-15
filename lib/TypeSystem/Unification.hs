@@ -1,7 +1,7 @@
 
 module TypeSystem.Unification
   ( freshUnificationVar
-  , unifyType
+  , unify
   , substituteType
   ) where
 
@@ -20,34 +20,34 @@ freshUnificationVar = do
   pure ty
 
 -- Tries to unify 2 types, updating the Substitution along the way.
-unifyType :: Type -> Type -> TypeCheckM ()
-unifyType t1 t2 = addContext (WhileUnifyingTypes t1 t2) $ do
+unify :: Type -> Type -> TypeCheckM ()
+unify t1 t2 = addContext (WhileUnifyingTypes t1 t2) $ do
   subst <- gets substitution
-  unifyType' (substituteType subst t1) (substituteType subst t2)
+  unify' (substituteType subst t1) (substituteType subst t2)
   where
-    unifyType' (TArrow t11 t12) (TArrow t21 t22) = do
-      unifyType t11 t21
-      unifyType t12 t22
-    unifyType' TInt TInt = pure ()
-    unifyType' TBool TBool = pure ()
-    unifyType' (TVar v1) (TVar v2) | v1 == v2 = pure ()
-    unifyType' (TUnknown u1) (TUnknown u2) | u1 == u2 = pure ()
-    unifyType' (TUnknown u) t = solveType u t
-    unifyType' t (TUnknown u) = solveType u t
-    unifyType' (TForAll name1 (Just scope1) ty1) (TForAll name2 (Just scope2) ty2) = do
+    unify' (TArrow t11 t12) (TArrow t21 t22) = do
+      unify t11 t21
+      unify t12 t22
+    unify' TInt TInt = pure ()
+    unify' TBool TBool = pure ()
+    unify' (TVar v1) (TVar v2) | v1 == v2 = pure ()
+    unify' (TUnknown u1) (TUnknown u2) | u1 == u2 = pure ()
+    unify' (TUnknown u) t = solveType u t
+    unify' t (TUnknown u) = solveType u t
+    unify' (TForAll name1 (Just scope1) ty1) (TForAll name2 (Just scope2) ty2) = do
       skolem <- newSkolemConstant
       let ty1' = replaceVarWithSkolem name1 skolem scope1 ty1
       let ty2' = replaceVarWithSkolem name2 skolem scope2 ty2
-      unifyType ty1' ty2'
-    unifyType' TForAll {} TForAll {} = panic "Found unitialized skolem scope."
-    unifyType' (TForAll name (Just scope) ty1) ty2 = do
+      unify ty1' ty2'
+    unify' TForAll {} TForAll {} = panic "Found unitialized skolem scope."
+    unify' (TForAll name (Just scope) ty1) ty2 = do
       skolem <- newSkolemConstant
       let ty1' = replaceVarWithSkolem name skolem scope ty1
-      unifyType ty1' ty2
-    unifyType' TForAll {} _ = panic "Found unitialized skolem scope."
-    unifyType' ty1 ty2@TForAll {} = unifyType ty2 ty1
-    unifyType' (TSkolem _ _ skolem1) (TSkolem _ _ skolem2) | skolem1 == skolem2 = pure ()
-    unifyType' ty1 ty2 = throwError $ UnificationFailure ty1 ty2
+      unify ty1' ty2
+    unify' TForAll {} _ = panic "Found unitialized skolem scope."
+    unify' ty1 ty2@TForAll {} = unify ty2 ty1
+    unify' (TSkolem _ _ skolem1) (TSkolem _ _ skolem2) | skolem1 == skolem2 = pure ()
+    unify' ty1 ty2 = throwError $ UnificationFailure ty1 ty2
 
 -- Recursively substitute the type given a subtitution
 substituteType :: Substitution -> Type -> Type

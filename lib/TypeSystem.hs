@@ -24,7 +24,7 @@ check' unknown@(TUnknown _) e = do
   e' <- infer e
   let ty = typeOf e'
   ty' <- instantiatePolyTypeWithUnknowns ty
-  unifyType ty' unknown
+  unify ty' unknown
   pure $ overrideType ty' e'
 check' expectedType e1@(Lam v e2) =
   case expectedType of
@@ -40,18 +40,18 @@ check' expectedType (If c t f) = do
 check' expectedType (V var) = do
   varType <- introduceSkolemScope <=< lookupVariable $ var
   expectedType' <- introduceSkolemScope expectedType
-  unifyType expectedType' varType
+  unify expectedType' varType
   pure $ V' expectedType' var
 check' expectedType (App f arg) = do
   f' <- infer f
   let fnType = typeOf f'
   app <- checkFunctionApplication f' fnType arg
-  unifyType expectedType (typeOf app)
+  unify expectedType (typeOf app)
   pure app
 check' expectedType (TyAnn e ty) = do
   expectedType' <- introduceSkolemScope expectedType
   ty' <- introduceSkolemScope ty
-  unifyType expectedType' ty'
+  unify expectedType' ty'
   check ty' e
 check' _ Hole = do
   env <- ask
@@ -59,7 +59,7 @@ check' _ Hole = do
 check' expectedType e = do
   typedExpr <- infer e
   let actualType = typeOf typedExpr
-  unifyType expectedType actualType
+  unify expectedType actualType
   pure typedExpr
 
 infer :: Expr -> TypeCheckM TypedExpr
@@ -95,7 +95,7 @@ infer' = \case
         tyE = typeOf e'
     tyT' <- instantiatePolyTypeWithUnknowns tyT
     tyE' <- instantiatePolyTypeWithUnknowns tyE
-    unifyType tyT' tyE'
+    unify tyT' tyE'
     pure $ If' tyT' c' t' e'
   Hole -> do
     env <- ask
@@ -139,7 +139,7 @@ checkFunctionApplication' fn ty arg = do
     pure $ overrideType ty'' arg'
   retTy <- freshUnificationVar
   let argType = typeOf argument
-  unifyType ty (TArrow argType retTy)
+  unify ty (TArrow argType retTy)
   pure $ App' retTy fn argument
 
 typeOf :: TypedExpr -> Type
