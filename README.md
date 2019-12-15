@@ -2,8 +2,8 @@
 # Typesystem
 
 This repo contains some experiments using a bidirectional typechecker.
-The approach is mostly based upon [this tutorial](http://www.davidchristiansen.dk/tutorials/bidirectional.pdf),
-but adds some extra things:
+The approach is heavily based upon [this tutorial](http://www.davidchristiansen.dk/tutorials/bidirectional.pdf)
+and the purescript typechecker and does the following things:
 
 - Step by step error reporting
 - Support for typed holes
