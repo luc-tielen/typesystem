@@ -40,7 +40,7 @@ data Type
   | TVar Var                        -- Type variable, provided by the user
   | TUnknown Int                    -- Used only during unification, when having to guess a type
   | TSkolem Var SkolemScope Skolem  -- Rigid type variable, only available in a specific scope
-  | TForAll Var SkolemScope Type
+  | TForAll Var (Maybe SkolemScope) Type
   | TArrow Type Type
   deriving (Eq, Show)
 

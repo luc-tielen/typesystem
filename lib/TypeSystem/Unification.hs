@@ -34,15 +34,17 @@ unifyType t1 t2 = addContext (WhileUnifyingTypes t1 t2) $ do
     unifyType' (TUnknown u1) (TUnknown u2) | u1 == u2 = pure ()
     unifyType' (TUnknown u) t = solveType u t
     unifyType' t (TUnknown u) = solveType u t
-    unifyType' (TForAll name1 scope1 ty1) (TForAll name2 scope2 ty2) = do
+    unifyType' (TForAll name1 (Just scope1) ty1) (TForAll name2 (Just scope2) ty2) = do
       skolem <- newSkolemConstant
       let ty1' = replaceVarWithSkolem name1 skolem scope1 ty1
       let ty2' = replaceVarWithSkolem name2 skolem scope2 ty2
       unifyType ty1' ty2'
-    unifyType' (TForAll name scope ty1) ty2 = do
+    unifyType' TForAll {} TForAll {} = panic "Found unitialized skolem scope."
+    unifyType' (TForAll name (Just scope) ty1) ty2 = do
       skolem <- newSkolemConstant
       let ty1' = replaceVarWithSkolem name skolem scope ty1
       unifyType ty1' ty2
+    unifyType' TForAll {} _ = panic "Found unitialized skolem scope."
     unifyType' ty1 ty2@TForAll {} = unifyType ty2 ty1
     unifyType' (TSkolem _ _ skolem1) (TSkolem _ _ skolem2) | skolem1 == skolem2 = pure ()
     unifyType' ty1 ty2 = throwError $ UnificationFailure ty1 ty2

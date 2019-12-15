@@ -24,9 +24,8 @@ newSkolemConstant = do
 -- | Introduce skolem scope at every occurence of a ForAll
 introduceSkolemScope :: Type -> TypeCheckM Type
 introduceSkolemScope = \case
-  -- TODO: only add scope when no scope previously assigned
-  TForAll name _ ty -> do
-    scope <- newSkolemScope
+  TForAll name Nothing ty -> do
+    scope <- Just <$> newSkolemScope
     pure $ TForAll name scope ty
   TArrow t1 t2 ->
     TArrow <$> introduceSkolemScope t1
@@ -99,7 +98,8 @@ checkForEscapedSkolems' ty = do
     Just errors' -> throwError $ MultipleErrors errors'
   where
     collectScopes = \case
-      TForAll _ scope t -> Set.insert scope $ collectScopes t
+      TForAll _ (Just scope) t -> Set.insert scope $ collectScopes t
+      TForAll {} -> panic "Found unitialized skolem scope."
       _ -> mempty
     collectSkolems = \case
       TForAll _ _ t -> collectSkolems t

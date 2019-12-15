@@ -19,7 +19,7 @@ check' (TForAll name _ ty) expr = do
   let ty' = replaceVarWithSkolem name skolem scope ty
       expr' = replaceVarWithSkolemInExpr name skolem scope expr
   typedExpr <- check ty' expr'
-  pure $ overrideType (TForAll name scope ty) typedExpr
+  pure $ overrideType (TForAll name (Just scope) ty) typedExpr
 check' unknown@(TUnknown _) e = do
   e' <- infer e
   let ty = typeOf e'
